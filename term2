@@ -1,0 +1,160 @@
+data
+2012-07-16     15:43	 Bangalore	Men's Clothing	208.97	Visa	
+2012-07-18     20:15	 Mumbai  	Electronics	1005.20	cash
+
+term work 2
+//mapper
+
+import string
+import fileinput
+
+for line in fileinput.input():
+    data = line.strip().split("\t")
+    if len(data) == 6:
+        date, time, location, item, cost, payment = data
+        print "{0}\t{1}".format(location, cost)
+
+reducer
+
+import fileinput
+transactions_count = 0
+sales_total = 0
+for line in fileinput.input():
+    data = line.strip().split("\t")    
+    if len(data) != 2:
+               continue
+    current_key, current_value = data
+    transactions_count += 1
+    sales_total += float(current_value)
+print transactions_count, "\t", sales_total
+
+term work 3
+
+001, M, 22, 45, 76, 3, 1
+002,F, 33, 67, 58, 1, 2
+003,M, 45, 89, 28, 1, 2
+004,F, 56, 54, 69, 1, 2
+005 ,M, 78, 34, 46, 1, 2
+
+mapper
+
+#!/usr/bin/python
+import sys
+# input comes from STDIN (standard input)
+for line in sys.stdin:
+    line = line.strip()
+    line = line.split(",")
+    if len(line) >=2:
+        gender = line[1]
+        age = line[2]
+        print '%s\t%s' % (gender, age)
+
+reducer
+
+#!/usr/bin/python
+
+import sys
+gender_age = {}
+
+for line in sys.stdin:
+    line = line.strip()
+    gender, age = line.split('\t')
+    if gender in gender_age:
+        gender_age[gender].append(int(age))
+    else:
+        gender_age[gender] = []
+        gender_age[gender].append(int(age))
+
+for gender in gender_age.keys():
+    ave_age = sum(gender_age[gender])*1.0 / len(gender_age[gender])
+    print '%s\t%s'% (gender, ave_age)
+
+
+
+term work 4
+
+1, M, 25000, 2, Agree
+2, F, 50000, 1, Disagree
+3,M,75000,0,Neutral
+4,F,80000,2,Agree
+5,F,10000,1,DisAgree
+6,F,20000,3,Neutral
+7,M,17000,0,DisAgree
+8,F,15000,0,DisAgree
+9,M,60000,1,Agree
+10,F,45000,1,Agree
+11,F,46000,3,DisAgree
+12,F,50000,3,Neutral
+
+mapper
+
+#!/usr/bin/env python
+import sys
+for line in sys.stdin:
+    line = line.strip()
+    line = line.split(",")
+    if len(line) >=2:
+        pid = line[0]
+        opinion = line[4]
+        print '%s\t%s' % (pid, opinion)
+
+reducer
+
+#!/usr/bin/env python
+import sys
+opiniondic={}
+count=0
+for line in sys.stdin:
+    line = line.strip()
+    pid, opinion = line.split('\t')
+    if opinion in opiniondic:
+        opiniondic[opinion].append(count+1)
+    else:
+        opiniondic[opinion] = []
+        opiniondic[opinion].append(count+1)
+for op in opiniondic.keys():
+    count=len(opiniondic[op])
+    print '%s\t%s'% (op,count)
+
+
+
+term work 5
+E001, Sunita, Accounts, 15000 
+E002, Harsh, IT, 50000
+E003, Ragini, IT, 75000
+E004, Mithun, Accounts, 20000 
+E005, Pruthavi, Marketing, 45000
+E006, Anjali, IT, 70000
+E007, Kunal, Marketing, 60000
+E008, Mitali, Accounts, 55000
+E009, Roopa, IT, 70000
+
+mapper
+#!/usr/bin/env python
+import sys
+for line in sys.stdin:
+    line = line.strip()
+    line = line.split(",")
+    if len(line) >=2:
+        dept = line[2]
+        sal = line[3]
+        print '%s\t%s' % (dept, sal)
+
+reducer
+
+#!/usr/bin/env python
+import sys
+deptdic={}
+
+
+for line in sys.stdin:
+    line = line.strip()
+    dept,sal = line.split('\t')
+    if dept in deptdic:
+        deptdic[dept].append(int(sal))
+    else:
+        deptdic[dept] = []
+        deptdic[dept].append(int(sal))
+for dept in deptdic.keys():
+    sum_sal = sum(deptdic[dept])
+    print '%s\t%s'% (dept,sum_sal)
